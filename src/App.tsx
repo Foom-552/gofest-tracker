@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 // --- Data Types ---
 interface RaidRecord {
@@ -12,6 +12,12 @@ interface RaidRecord {
   shiny: number;
   hundo: number;
   priority: 'High' | 'Medium' | 'Low' | 'None';
+}
+
+interface Toast {
+  id: number;
+  title: string;
+  icon: string;
 }
 
 // --- Custom Hook for Local Storage ---
@@ -37,6 +43,28 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
 
   return [storedValue, setValue];
 }
+
+// --- Custom Hook for Previous State ---
+function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
+}
+
+const animationStyles = `
+  @keyframes slideInUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; transform: scale(0.9); }
+  }
+`;
+
+const StyleInjector = ({ css }: { css: string }) => <style>{css}</style>;
 
 const INITIAL_SATURDAY_DATA: RaidRecord[] = [
   { id: 'sat-0', pokemon: 'Mega Mewtwo X', raidTier: 'Super Mega', habitat: 'All Day', timeAEST: '10:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
@@ -156,12 +184,65 @@ export default function App() {
 
   // Initial mock data - you will replace this with your Excel data
   const [saturdayData, setSaturdayData] = useLocalStorage<RaidRecord[]>('gofest_sat', INITIAL_SATURDAY_DATA);
-
   const [sundayData, setSundayData] = useLocalStorage<RaidRecord[]>('gofest_sun', INITIAL_SUNDAY_DATA);
 
   // Form state for adding new custom raids
   const [newPokemon, setNewPokemon] = useState('');
   const [hideCaught, setHideCaught] = useState(false);
+  const [toasts, setToasts] = useState<Toast[]>([]);
+
+  // --- Achievement Logic ---
+  const calculateAchievements = useCallback((satData: RaidRecord[], sunData: RaidRecord[]) => {
+    const allData = [...satData, ...sunData];
+    const totalCaught = allData.reduce((sum, r) => sum + (r.caught || 0), 0);
+    const totalShiny = allData.reduce((sum, r) => sum + (r.shiny || 0), 0);
+    const totalHundo = allData.reduce((sum, r) => sum + (r.hundo || 0), 0);
+    const caughtMewtwoX = satData.find(r => r.pokemon === 'Mega Mewtwo X')?.caught || 0;
+    const caughtMewtwoY = sunData.find(r => r.pokemon === 'Mega Mewtwo Y')?.caught || 0;
+    
+    const uniqueUltraBeasts = allData.filter(r => ['Nihilego', 'Buzzwole', 'Pheromosa', 'Xurkitree', 'Celesteela', 'Kartana', 'Guzzlord', 'Stakataka', 'Blacephalon'].includes(r.pokemon) && r.caught > 0).length;
+
+    return [
+      { id: 'first-blood', title: 'First Blood', desc: 'Complete your first raid of GO Fest.', icon: '🎯', unlocked: totalCaught >= 1 },
+      { id: 'raid-novice', title: 'Raid Novice', desc: 'Complete 10 total raids.', icon: '🥉', unlocked: totalCaught >= 10 },
+      { id: 'raid-pro', title: 'Raid Professional', desc: 'Complete 30 total raids.', icon: '🥈', unlocked: totalCaught >= 30 },
+      { id: 'raid-master', title: 'Raid Master', desc: 'Complete 50 total raids.', icon: '🥇', unlocked: totalCaught >= 50 },
+      { id: 'shiny-spark', title: 'Ooh, Sparkly!', desc: 'Catch your first Shiny Pokémon.', icon: '✨', unlocked: totalShiny >= 1 },
+      { id: 'shiny-hunter', title: 'Shiny Hunter', desc: 'Catch 5 or more Shiny Pokémon.', icon: '🌟', unlocked: totalShiny >= 5 },
+      { id: 'perfect-catch', title: 'Perfection', desc: 'Catch a 100% IV (Hundo) Pokémon.', icon: '💯', unlocked: totalHundo >= 1 },
+      { id: 'super-mega', title: 'Super Mega Power', desc: 'Catch both Mega Mewtwo X and Mega Mewtwo Y.', icon: '🧬', unlocked: caughtMewtwoX > 0 && caughtMewtwoY > 0 },
+      { id: 'beast-ball', title: 'Ultra Beast Collector', desc: 'Catch at least 5 different Ultra Beasts.', icon: '🌌', unlocked: uniqueUltraBeasts >= 5 }
+    ];
+  }, []);
+
+  const addToast = useCallback((title: string, icon: string) => {
+    const newToast = { id: Date.now(), title, icon };
+    setToasts(prevToasts => [...prevToasts, newToast]);
+    setTimeout(() => {
+      setToasts(prevToasts => prevToasts.filter(t => t.id !== newToast.id));
+    }, 4000); // Remove after 4 seconds
+  }, []);
+
+  const prevSaturdayData = usePrevious(saturdayData);
+  const prevSundayData = usePrevious(sundayData);
+
+  useEffect(() => {
+    // Don't run on initial render or if previous data is not available
+    if (!prevSaturdayData || !prevSundayData) {
+      return;
+    }
+
+    const prevAchievements = calculateAchievements(prevSaturdayData, prevSundayData);
+    const currentAchievements = calculateAchievements(saturdayData, sundayData);
+
+    currentAchievements.forEach((current, index) => {
+      const prev = prevAchievements[index];
+      if (current.unlocked && !prev.unlocked) {
+        // Achievement was just unlocked!
+        addToast(current.title, current.icon);
+      }
+    });
+  }, [saturdayData, sundayData, prevSaturdayData, prevSundayData, calculateAchievements, addToast]);
 
   // --- Handlers ---
   const updateCount = (id: string, day: 'Saturday' | 'Sunday', field: 'caught' | 'shiny' | 'hundo', value: number) => {
@@ -315,13 +396,22 @@ export default function App() {
     const visibleData = hideCaught ? data.filter(r => r.caught === 0) : data;
     const caughtCount = data.filter(r => r.caught > 0).length;
     const totalCount = data.length;
+    const progressPercent = totalCount === 0 ? 0 : Math.round((caughtCount / totalCount) * 100);
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         <div style={styles.toolbar}>
-          <span style={styles.progressText}>🏆 Progress: {caughtCount} / {totalCount}</span>
+          <div style={{ flex: 1, minWidth: '200px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={styles.progressText}>🏆 Progress: {caughtCount} / {totalCount}</span>
+              <span style={{ fontWeight: 'bold', color: '#666' }}>{progressPercent}%</span>
+            </div>
+            <div style={styles.progressBarBg}>
+              <div style={{ ...styles.progressBarFill, width: `${progressPercent}%` }}></div>
+            </div>
+          </div>
           <label style={styles.filterLabel}>
-            <input type="checkbox" checked={hideCaught} onChange={(e) => setHideCaught(e.target.checked)} style={{ marginRight: '8px', transform: 'scale(1.2)', cursor: 'pointer' }} />
+            <input type="checkbox" checked={hideCaught} onChange={(e) => setHideCaught(e.target.checked)} style={{ marginRight: '8px', transform: 'scale(1.1)', cursor: 'pointer' }} />
             Hide Caught
           </label>
         </div>
@@ -343,10 +433,10 @@ export default function App() {
                   <table style={styles.table}>
                     <thead>
                       <tr>
-                        <th style={styles.th}>Pokémon</th>
-                        <th style={styles.th}>Raid Tier</th>
-                        <th style={styles.th}>Habitat</th>
-                        <th style={styles.th}>Region</th>
+                        <th style={{ ...styles.th, textAlign: 'left' }}>Pokémon</th>
+                        <th style={{ ...styles.th, textAlign: 'left' }}>Raid Tier</th>
+                        <th style={{ ...styles.th, textAlign: 'left' }}>Habitat</th>
+                        <th style={{ ...styles.th, textAlign: 'left' }}>Region</th>
                         <th style={styles.th}>Priority</th>
                         <th style={styles.th}>Caught?</th>
                         <th style={styles.th}>Shiny?</th>
@@ -431,6 +521,7 @@ export default function App() {
 
   return (
     <div style={styles.container}>
+      <StyleInjector css={animationStyles} />
       <h1 style={{ textAlign: 'center', color: '#333' }}>GO Fest 2026 Tracker</h1>
       
       <div style={styles.profileSection}>
