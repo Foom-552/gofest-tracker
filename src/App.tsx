@@ -8,9 +8,9 @@ interface RaidRecord {
   habitat: string;
   timeAEST: string;
   region: string;
-  caught: boolean;
-  shiny: boolean;
-  hundo: boolean;
+  caught: number;
+  shiny: number;
+  hundo: number;
   priority: 'High' | 'Medium' | 'Low' | 'None';
 }
 
@@ -39,115 +39,115 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T) => voi
 }
 
 const INITIAL_SATURDAY_DATA: RaidRecord[] = [
-  { id: 'sat-0', pokemon: 'Mega Mewtwo X', raidTier: 'Super Mega', habitat: 'All Day', timeAEST: '10:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
+  { id: 'sat-0', pokemon: 'Mega Mewtwo X', raidTier: 'Super Mega', habitat: 'All Day', timeAEST: '10:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
   
   // Stormfire Peaks
-  { id: 'sat-1', pokemon: 'Mega Abomasnow', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-2', pokemon: 'Mega Blaziken', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-3', pokemon: 'Raikou', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-4', pokemon: 'Suicune', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-5', pokemon: 'Mega Ampharos', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-6', pokemon: 'Articuno', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-7', pokemon: 'Entei', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-8', pokemon: 'Ho-Oh', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-9', pokemon: 'Lugia', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-10', pokemon: 'Moltres', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-11', pokemon: 'Zapdos', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
+  { id: 'sat-1', pokemon: 'Mega Abomasnow', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-2', pokemon: 'Mega Blaziken', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-3', pokemon: 'Raikou', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-4', pokemon: 'Suicune', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-5', pokemon: 'Mega Ampharos', raidTier: 'Mega', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-6', pokemon: 'Articuno', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-7', pokemon: 'Entei', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-8', pokemon: 'Ho-Oh', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-9', pokemon: 'Lugia', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-10', pokemon: 'Moltres', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-11', pokemon: 'Zapdos', raidTier: '5-Star', habitat: '⚡🔥❄️ Stormfire Peaks', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
   
   // Astral Tides
-  { id: 'sat-12', pokemon: 'Mega Gengar', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-13', pokemon: 'Mega Swampert', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-14', pokemon: 'Uxie', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Asia-Pacific', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-15', pokemon: 'Mesprit', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Europe/ME/Africa/India', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-16', pokemon: 'Azelf', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Americas', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-17', pokemon: 'Xerneas', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-18', pokemon: 'Yveltal', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-19', pokemon: 'Solgaleo', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-20', pokemon: 'Lunala', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-21', pokemon: 'Dialga', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-22', pokemon: 'Origin Giratina', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-23', pokemon: 'Mega Alakazam', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-24', pokemon: 'Palkia', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-25', pokemon: 'Altered Giratina', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
+  { id: 'sat-12', pokemon: 'Mega Gengar', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-13', pokemon: 'Mega Swampert', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-14', pokemon: 'Uxie', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Asia-Pacific', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-15', pokemon: 'Mesprit', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Europe/ME/Africa/India', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-16', pokemon: 'Azelf', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Americas', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-17', pokemon: 'Xerneas', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-18', pokemon: 'Yveltal', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-19', pokemon: 'Solgaleo', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-20', pokemon: 'Lunala', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-21', pokemon: 'Dialga', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-22', pokemon: 'Origin Giratina', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-23', pokemon: 'Mega Alakazam', raidTier: 'Mega', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-24', pokemon: 'Palkia', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-25', pokemon: 'Altered Giratina', raidTier: '5-Star', habitat: '🔮👻💧 Astral Tides', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
   
   // Dragonflight Summit
-  { id: 'sat-26', pokemon: 'Rayquaza', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-27', pokemon: 'Kyurem', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-28', pokemon: 'Kyogre', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-29', pokemon: 'Mega Aerodactyl', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-30', pokemon: 'Mega Pidgeot', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sat-31', pokemon: 'Mega Salamence', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-32', pokemon: 'Groudon', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-33', pokemon: 'Reshiram', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sat-34', pokemon: 'Zekrom', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' }
+  { id: 'sat-26', pokemon: 'Rayquaza', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-27', pokemon: 'Kyurem', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-28', pokemon: 'Kyogre', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-29', pokemon: 'Mega Aerodactyl', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-30', pokemon: 'Mega Pidgeot', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sat-31', pokemon: 'Mega Salamence', raidTier: 'Mega', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-32', pokemon: 'Groudon', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-33', pokemon: 'Reshiram', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sat-34', pokemon: 'Zekrom', raidTier: '5-Star', habitat: '🦅🪨🐉 Dragonflight Summit', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' }
 ];
 
 const INITIAL_SUNDAY_DATA: RaidRecord[] = [
-  { id: 'sun-0', pokemon: 'Mega Mewtwo Y', raidTier: 'Super Mega', habitat: 'All Day', timeAEST: '10:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
+  { id: 'sun-0', pokemon: 'Mega Mewtwo Y', raidTier: 'Super Mega', habitat: 'All Day', timeAEST: '10:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
 
   // Earthforged Domain
-  { id: 'sun-1', pokemon: 'Origin Dialga', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-2', pokemon: 'Mega Garchomp', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-3', pokemon: 'Registeel', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-4', pokemon: 'Origin Palkia', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-5', pokemon: 'Regigigas', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-6', pokemon: 'Therian Tornadus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-7', pokemon: 'Incarnate Thundurus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-8', pokemon: 'Therian Thundurus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-9', pokemon: 'Therian Landorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-10', pokemon: 'Incarnate Enamorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-11', pokemon: 'Therian Enamorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-12', pokemon: 'Regieleki', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-13', pokemon: 'Regidrago', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-14', pokemon: 'Mega Metagross', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-15', pokemon: 'Regirock', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-16', pokemon: 'Regice', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-17', pokemon: 'Heatran', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-18', pokemon: 'Incarnate Tornadus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-19', pokemon: 'Incarnate Landorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-20', pokemon: 'Mega Audino', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Low' },
+  { id: 'sun-1', pokemon: 'Origin Dialga', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-2', pokemon: 'Mega Garchomp', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-3', pokemon: 'Registeel', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-4', pokemon: 'Origin Palkia', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-5', pokemon: 'Regigigas', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-6', pokemon: 'Therian Tornadus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-7', pokemon: 'Incarnate Thundurus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-8', pokemon: 'Therian Thundurus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-9', pokemon: 'Therian Landorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-10', pokemon: 'Incarnate Enamorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-11', pokemon: 'Therian Enamorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-12', pokemon: 'Regieleki', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-13', pokemon: 'Regidrago', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-14', pokemon: 'Mega Metagross', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-15', pokemon: 'Regirock', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-16', pokemon: 'Regice', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-17', pokemon: 'Heatran', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-18', pokemon: 'Incarnate Tornadus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-19', pokemon: 'Incarnate Landorus', raidTier: '5-Star', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-20', pokemon: 'Mega Audino', raidTier: 'Mega', habitat: '🪨⚙️⬜ Earthforged Domain', timeAEST: '10:00 - 13:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Low' },
 
   // Verdant Anomaly
-  { id: 'sun-21', pokemon: 'Buzzwole', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Americas/Greenland', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-22', pokemon: 'Pheromosa', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Europe/ME/Africa/India', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-23', pokemon: 'Kartana', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Northern Hemisphere', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-24', pokemon: 'Blacephalon', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Western Hemisphere', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-25', pokemon: 'Mega Pinsir', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-26', pokemon: 'Mega Sceptile', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-27', pokemon: 'Normal Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-28', pokemon: 'Attack Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-29', pokemon: 'Defense Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-30', pokemon: 'Douse Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-31', pokemon: 'Shock Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-32', pokemon: 'Burn Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-33', pokemon: 'Chill Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-34', pokemon: 'Nihilego', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-35', pokemon: 'Xurkitree', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Asia-Pacific', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-36', pokemon: 'Celesteela', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Southern Hemisphere', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-37', pokemon: 'Guzzlord', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-38', pokemon: 'Stakataka', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Eastern Hemisphere', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-39', pokemon: 'Tapu Koko', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-40', pokemon: 'Speed Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-41', pokemon: 'Tapu Bulu', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-42', pokemon: 'Tapu Fini', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-43', pokemon: 'Mega Beedrill', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-44', pokemon: 'Normal Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-45', pokemon: 'Necrozma', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-46', pokemon: 'Tapu Lele', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
+  { id: 'sun-21', pokemon: 'Buzzwole', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Americas/Greenland', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-22', pokemon: 'Pheromosa', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Europe/ME/Africa/India', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-23', pokemon: 'Kartana', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Northern Hemisphere', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-24', pokemon: 'Blacephalon', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Western Hemisphere', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-25', pokemon: 'Mega Pinsir', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-26', pokemon: 'Mega Sceptile', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-27', pokemon: 'Normal Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-28', pokemon: 'Attack Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-29', pokemon: 'Defense Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-30', pokemon: 'Douse Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-31', pokemon: 'Shock Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-32', pokemon: 'Burn Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-33', pokemon: 'Chill Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-34', pokemon: 'Nihilego', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-35', pokemon: 'Xurkitree', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Asia-Pacific', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-36', pokemon: 'Celesteela', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Southern Hemisphere', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-37', pokemon: 'Guzzlord', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-38', pokemon: 'Stakataka', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Eastern Hemisphere', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-39', pokemon: 'Tapu Koko', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-40', pokemon: 'Speed Deoxys', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-41', pokemon: 'Tapu Bulu', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-42', pokemon: 'Tapu Fini', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-43', pokemon: 'Mega Beedrill', raidTier: 'Mega', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-44', pokemon: 'Normal Genesect', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-45', pokemon: 'Necrozma', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-46', pokemon: 'Tapu Lele', raidTier: '5-Star', habitat: '🐛🌿☠️ Verdant Anomaly', timeAEST: '13:00 - 16:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
 
   // Twilight Battlefield
-  { id: 'sun-47', pokemon: 'Mega Tyranitar', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-48', pokemon: 'Mega Gardevoir', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-49', pokemon: 'Mega Lucario', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-50', pokemon: 'Hero Zacian', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-51', pokemon: 'Latios', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-52', pokemon: 'Cresselia', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-53', pokemon: 'Cobalion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-54', pokemon: 'Terrakion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-55', pokemon: 'Hero Zamazenta', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-56', pokemon: 'Latias', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' },
-  { id: 'sun-57', pokemon: 'Darkrai', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'High' },
-  { id: 'sun-58', pokemon: 'Virizion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: false, shiny: false, hundo: false, priority: 'Medium' }
+  { id: 'sun-47', pokemon: 'Mega Tyranitar', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-48', pokemon: 'Mega Gardevoir', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-49', pokemon: 'Mega Lucario', raidTier: 'Mega', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-50', pokemon: 'Hero Zacian', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-51', pokemon: 'Latios', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-52', pokemon: 'Cresselia', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-53', pokemon: 'Cobalion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-54', pokemon: 'Terrakion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-55', pokemon: 'Hero Zamazenta', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-56', pokemon: 'Latias', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' },
+  { id: 'sun-57', pokemon: 'Darkrai', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'High' },
+  { id: 'sun-58', pokemon: 'Virizion', raidTier: '5-Star', habitat: '🌑🧚🥊 Twilight Battlefield', timeAEST: '16:00 - 19:00', region: 'Global', caught: 0, shiny: 0, hundo: 0, priority: 'Medium' }
 ];
 
 export default function App() {
@@ -164,10 +164,10 @@ export default function App() {
   const [hideCaught, setHideCaught] = useState(false);
 
   // --- Handlers ---
-  const toggleCheckbox = (id: string, day: 'Saturday' | 'Sunday', field: 'caught' | 'shiny' | 'hundo') => {
+  const updateCount = (id: string, day: 'Saturday' | 'Sunday', field: 'caught' | 'shiny' | 'hundo', value: number) => {
     const data = day === 'Saturday' ? saturdayData : sundayData;
     const setData = day === 'Saturday' ? setSaturdayData : setSundayData;
-    setData(data.map(r => r.id === id ? { ...r, [field]: !r[field] } : r));
+    setData(data.map(r => r.id === id ? { ...r, [field]: Math.max(0, value) } : r));
   };
 
   const updatePriority = (id: string, day: 'Saturday' | 'Sunday', newPriority: RaidRecord['priority']) => {
@@ -187,9 +187,9 @@ export default function App() {
       habitat: 'Any',
       timeAEST: 'Any',
       region: 'Global',
-      caught: false,
-      shiny: false,
-      hundo: false,
+      caught: 0,
+      shiny: 0,
+      hundo: 0,
       priority: 'Medium'
     };
 
@@ -267,8 +267,8 @@ export default function App() {
       { label: '➕ Custom Raids', timeAEST: 'Any' },
     ];
 
-    const visibleData = hideCaught ? data.filter(r => !r.caught) : data;
-    const caughtCount = data.filter(r => r.caught).length;
+    const visibleData = hideCaught ? data.filter(r => r.caught === 0) : data;
+    const caughtCount = data.filter(r => r.caught > 0).length;
     const totalCount = data.length;
 
     return (
@@ -310,7 +310,7 @@ export default function App() {
                     </thead>
                     <tbody>
                       {slotData.map((record) => (
-                        <tr key={record.id} style={record.caught ? styles.rowCaught : styles.row}>
+                        <tr key={record.id} style={record.caught > 0 ? styles.rowCaught : styles.row}>
                           <td style={styles.td}><strong>{record.pokemon}</strong></td>
                           <td style={styles.td}>{record.raidTier}</td>
                           <td style={styles.td}>{record.habitat}</td>
@@ -329,26 +329,32 @@ export default function App() {
                           </td>
                           <td style={styles.td}>
                             <input 
-                              type="checkbox" 
-                              checked={record.caught} 
-                              onChange={() => toggleCheckbox(record.id, day, 'caught')} 
-                              style={{ transform: 'scale(1.5)', cursor: 'pointer' }}
+                              type="number" 
+                              min="0"
+                              placeholder="0"
+                              value={record.caught || ''} 
+                              onChange={(e) => updateCount(record.id, day, 'caught', parseInt(e.target.value) || 0)} 
+                              style={styles.numberInput}
                             />
                           </td>
                           <td style={styles.td}>
                             <input 
-                              type="checkbox" 
-                              checked={record.shiny} 
-                              onChange={() => toggleCheckbox(record.id, day, 'shiny')} 
-                              style={{ transform: 'scale(1.5)', cursor: 'pointer' }}
+                              type="number" 
+                              min="0"
+                              placeholder="0"
+                              value={record.shiny || ''} 
+                              onChange={(e) => updateCount(record.id, day, 'shiny', parseInt(e.target.value) || 0)} 
+                              style={styles.numberInput}
                             />
                           </td>
                           <td style={styles.td}>
                             <input 
-                              type="checkbox" 
-                              checked={record.hundo} 
-                              onChange={() => toggleCheckbox(record.id, day, 'hundo')} 
-                              style={{ transform: 'scale(1.5)', cursor: 'pointer' }}
+                              type="number" 
+                              min="0"
+                              placeholder="0"
+                              value={record.hundo || ''} 
+                              onChange={(e) => updateCount(record.id, day, 'hundo', parseInt(e.target.value) || 0)} 
+                              style={styles.numberInput}
                             />
                           </td>
                         </tr>
@@ -431,6 +437,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   row: { transition: 'background-color 0.2s' },
   rowCaught: { backgroundColor: '#e8f5e9', color: '#888', textDecoration: 'line-through' },
   select: { padding: '6px', borderRadius: '4px', border: '1px solid #ccc' },
+  numberInput: { width: '60px', padding: '6px', borderRadius: '4px', border: '1px solid #ccc', textAlign: 'center', fontSize: '14px' },
   addForm: { display: 'flex', marginTop: '10px', borderTop: '1px solid #eee', paddingTop: '15px' },
   toolbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', padding: '15px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
   progressText: { fontWeight: 'bold', color: '#E3350D', fontSize: '16px' },
