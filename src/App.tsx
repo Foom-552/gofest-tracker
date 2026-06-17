@@ -152,7 +152,7 @@ const INITIAL_SUNDAY_DATA: RaidRecord[] = [
 
 export default function App() {
   const [displayName, setDisplayName] = useLocalStorage<string>('gofest_displayName', '');
-  const [activeTab, setActiveTab] = useState<'Summary' | 'Saturday' | 'Sunday'>('Summary');
+  const [activeTab, setActiveTab] = useState<'Summary' | 'Saturday' | 'Sunday' | 'Achievements'>('Summary');
 
   // Initial mock data - you will replace this with your Excel data
   const [saturdayData, setSaturdayData] = useLocalStorage<RaidRecord[]>('gofest_sat', INITIAL_SATURDAY_DATA);
@@ -257,6 +257,51 @@ export default function App() {
       <button onClick={resetProgress} style={{ ...styles.button, backgroundColor: '#dc3545', marginTop: '10px', marginLeft: '0' }}>Reset All Progress</button>
     </div>
   );
+
+  const renderAchievementsTab = () => {
+    const allData = [...saturdayData, ...sundayData];
+    const totalCaught = allData.reduce((sum, r) => sum + (r.caught || 0), 0);
+    const totalShiny = allData.reduce((sum, r) => sum + (r.shiny || 0), 0);
+    const totalHundo = allData.reduce((sum, r) => sum + (r.hundo || 0), 0);
+    const caughtMewtwoX = saturdayData.find(r => r.pokemon === 'Mega Mewtwo X')?.caught || 0;
+    const caughtMewtwoY = sundayData.find(r => r.pokemon === 'Mega Mewtwo Y')?.caught || 0;
+    
+    const uniqueUltraBeasts = allData.filter(r => ['Nihilego', 'Buzzwole', 'Pheromosa', 'Xurkitree', 'Celesteela', 'Kartana', 'Guzzlord', 'Stakataka', 'Blacephalon'].includes(r.pokemon) && r.caught > 0).length;
+
+    const achievements = [
+      { id: 'first-blood', title: 'First Blood', desc: 'Complete your first raid of GO Fest.', icon: '🎯', unlocked: totalCaught >= 1 },
+      { id: 'raid-novice', title: 'Raid Novice', desc: 'Complete 10 total raids.', icon: '🥉', unlocked: totalCaught >= 10 },
+      { id: 'raid-pro', title: 'Raid Professional', desc: 'Complete 30 total raids.', icon: '🥈', unlocked: totalCaught >= 30 },
+      { id: 'raid-master', title: 'Raid Master', desc: 'Complete 50 total raids.', icon: '🥇', unlocked: totalCaught >= 50 },
+      { id: 'shiny-spark', title: 'Ooh, Sparkly!', desc: 'Catch your first Shiny Pokémon.', icon: '✨', unlocked: totalShiny >= 1 },
+      { id: 'shiny-hunter', title: 'Shiny Hunter', desc: 'Catch 5 or more Shiny Pokémon.', icon: '🌟', unlocked: totalShiny >= 5 },
+      { id: 'perfect-catch', title: 'Perfection', desc: 'Catch a 100% IV (Hundo) Pokémon.', icon: '💯', unlocked: totalHundo >= 1 },
+      { id: 'super-mega', title: 'Super Mega Power', desc: 'Catch both Mega Mewtwo X and Mega Mewtwo Y.', icon: '🧬', unlocked: caughtMewtwoX > 0 && caughtMewtwoY > 0 },
+      { id: 'beast-ball', title: 'Ultra Beast Collector', desc: 'Catch at least 5 different Ultra Beasts.', icon: '🌌', unlocked: uniqueUltraBeasts >= 5 }
+    ];
+
+    const unlockedCount = achievements.filter(a => a.unlocked).length;
+
+    return (
+      <div style={styles.card}>
+        <h2 style={styles.header}>🏆 Achievements ({unlockedCount}/{achievements.length})</h2>
+        <p style={{ marginBottom: '20px', color: '#666' }}>Track your overall progress throughout the event. Can you unlock them all?</p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {achievements.map(a => (
+            <div key={a.id} style={{ ...styles.achievementCard, ...(a.unlocked ? styles.achievementUnlocked : styles.achievementLocked) }}>
+              <div style={styles.achievementIcon}>{a.icon}</div>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', color: a.unlocked ? '#E3350D' : '#555' }}>{a.title}</h3>
+                <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{a.desc}</p>
+              </div>
+              {a.unlocked && <div style={{ fontSize: '24px', color: '#4CAF50' }}>✅</div>}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const renderTrackerTable = (day: 'Saturday' | 'Sunday', data: RaidRecord[]) => {
     const timeSlots = [
@@ -400,13 +445,13 @@ export default function App() {
       </div>
 
       <div style={styles.tabContainer}>
-        {(['Summary', 'Saturday', 'Sunday'] as const).map((tab) => (
+        {(['Summary', 'Saturday', 'Sunday', 'Achievements'] as const).map((tab) => (
           <button 
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={activeTab === tab ? styles.activeTab : styles.tab}
           >
-            {tab === 'Summary' ? 'Tips' : `${tab} July`}
+            {tab === 'Summary' ? 'Tips' : tab === 'Achievements' ? 'Achievements' : `${tab} July`}
           </button>
         ))}
       </div>
@@ -415,6 +460,7 @@ export default function App() {
         {activeTab === 'Summary' && renderSummaryTab()}
         {activeTab === 'Saturday' && renderTrackerTable('Saturday', saturdayData)}
         {activeTab === 'Sunday' && renderTrackerTable('Sunday', sundayData)}
+        {activeTab === 'Achievements' && renderAchievementsTab()}
       </div>
     </div>
   );
@@ -441,5 +487,9 @@ const styles: { [key: string]: React.CSSProperties } = {
   addForm: { display: 'flex', marginTop: '10px', borderTop: '1px solid #eee', paddingTop: '15px' },
   toolbar: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', padding: '15px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' },
   progressText: { fontWeight: 'bold', color: '#E3350D', fontSize: '16px' },
-  filterLabel: { display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#555', fontWeight: 'bold', fontSize: '16px' }
+  filterLabel: { display: 'flex', alignItems: 'center', cursor: 'pointer', color: '#555', fontWeight: 'bold', fontSize: '16px' },
+  achievementCard: { display: 'flex', alignItems: 'center', padding: '15px', border: '2px solid #eee', borderRadius: '8px', backgroundColor: '#fff', transition: 'all 0.3s ease' },
+  achievementUnlocked: { borderColor: '#E3350D', backgroundColor: '#fff9f9', boxShadow: '0 2px 5px rgba(227, 53, 13, 0.1)' },
+  achievementLocked: { opacity: 0.6, filter: 'grayscale(100%)' },
+  achievementIcon: { fontSize: '32px', marginRight: '15px' }
 };
