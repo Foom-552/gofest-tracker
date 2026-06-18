@@ -357,6 +357,8 @@ export default function App() {
   const [showActiveOnly, setShowActiveOnly] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [editingRecord, setEditingRecord] = useState<{id: string, day: 'Saturday'|'Sunday'} | null>(null);
+  const [hasUnhiddenAll, setHasUnhiddenAll] = useLocalStorage<boolean>('gofest_unhiddenAll', false);
+  const [unlockedAchievementIds, setUnlockedAchievementIds] = useLocalStorage<string[]>('gofest_unlocked_achievements', []);
   
   // --- Global Timer for Countdowns ---
   const [currentTime, setCurrentTime] = useState(Date.now());
@@ -366,7 +368,7 @@ export default function App() {
   }, []);
 
   // --- Achievement Logic ---
-  const calculateAchievements = useCallback((satData: RaidRecord[], sunData: RaidRecord[]) => {
+  const calculateAchievements = useCallback((satData: RaidRecord[], sunData: RaidRecord[], unhiddenAll: boolean, unlockedIds: string[]) => {
     const allData = [...satData, ...sunData];
     const totalCaught = allData.reduce((sum, r) => sum + (r.caught || 0), 0);
     const totalShiny = allData.reduce((sum, r) => sum + (r.shiny || 0), 0);
@@ -416,7 +418,7 @@ export default function App() {
     ];
     const allHabitatsExplored = requiredHabitats.every(h => allData.some(r => r.habitat === h && (r.caught || 0) > 0));
 
-    return [
+    const rawAchievements = [
       { id: 'first-blood', title: 'First Blood', desc: 'Complete your first raid of GO Fest.', icon: '🎯', unlocked: totalCaught >= 1 },
       { id: 'raid-novice', title: 'Raid Novice', desc: 'Complete 10 total raids.', icon: '🥉', unlocked: totalCaught >= 10 },
       { id: 'raid-pro', title: 'Raid Professional', desc: 'Complete 30 total raids.', icon: '🥈', unlocked: totalCaught >= 30 },
@@ -434,7 +436,7 @@ export default function App() {
       { id: 'mega-evolution-master', title: 'Mega Evolution Master', desc: 'Collect 2,000 total Mega Energy.', icon: '🌌', unlocked: totalMegaEnergy >= 2000 },
       { id: 'primal-reversion-master', title: 'Primal Reversion Master', desc: 'Collect 2,000 total Primal Energy.', icon: '🌋', unlocked: totalPrimalEnergy >= 2000 },
       { id: 'project-mewtwo', title: 'Project Mewtwo', desc: 'Collect 1,000 Mega Energy for BOTH Mega Mewtwo X and Mega Mewtwo Y.', icon: '🧪', unlocked: mewtwoXMegaEnergy >= 1000 && mewtwoYMegaEnergy >= 1000 },
-      { id: 'shundo', title: 'SHUNDO!!!', desc: 'Catch a Shundo (100% IV Shiny) Pokémon!', icon: '🦄', unlocked: totalShundo >= 1 },
+      { id: 'shundo', title: 'SHUNDO!!!', desc: 'Catch a Shundo (100% IV Shiny) Pokémon!', icon: '🦄', unlocked: totalShundo >= 1, secret: true },
       { id: 'beast-ball', title: 'Ultra Beast Collector', desc: 'Catch at least 5 different Ultra Beasts.', icon: '🌌', unlocked: uniqueUltraBeasts >= 5 },
       { id: 'beast-master', title: 'Ultra Beast Master', desc: 'Catch all 9 featured Ultra Beasts.', icon: '🛸', unlocked: uniqueUltraBeasts >= 9 },
       { id: 'priority-target', title: 'Target Acquired', desc: 'Complete all of your "High" priority raids.', icon: '🔥', unlocked: completedHighPriority },
@@ -444,8 +446,13 @@ export default function App() {
       { id: 'sat-warrior', title: 'Saturday Warrior', desc: 'Complete 20 raids on Saturday.', icon: '☀️', unlocked: saturdayTotal >= 20 },
       { id: 'sun-warrior', title: 'Sunday Warrior', desc: 'Complete 20 raids on Sunday.', icon: '🌙', unlocked: sundayTotal >= 20 },
       { id: 'world-traveler', title: 'World Traveler', desc: 'Complete a raid in all 6 rotating habitats.', icon: '🗺️', unlocked: allHabitatsExplored },
-      { id: 'catch-em-all', title: 'Gotta Catch \'Em All', desc: 'Catch at least one of every possible raid boss.', icon: '🏅', unlocked: allCaught }
+      { id: 'catch-em-all', title: 'Gotta Catch \'Em All', desc: 'Catch at least one of every possible raid boss.', icon: '🏅', unlocked: allCaught },
+      { id: 'custom-boss', title: 'Off the Beaten Path', desc: 'Track a custom added raid boss.', icon: '🛤️', unlocked: allData.some(r => r.raidTier === 'Custom' && r.caught > 0), secret: true },
+      { id: 'hide-record', title: 'Nothing to See Here', desc: 'Hide a Pokémon from the tracker.', icon: '🙈', unlocked: allData.some(r => r.hidden === true), secret: true },
+      { id: 'unhide-all', title: 'The Great Reveal', desc: 'Unhide all Pokémon to give them a second chance.', icon: '👀', unlocked: unhiddenAll, secret: true }
     ];
+
+    return rawAchievements.map(a => ({ ...a, unlocked: unlockedIds.includes(a.id) || a.unlocked }));
   }, []);
 
   const addToast = useCallback((title: string, icon: string, action?: () => void, actionLabel?: string) => {
@@ -458,6 +465,8 @@ export default function App() {
 
   const prevSaturdayData = usePrevious(saturdayData);
   const prevSundayData = usePrevious(sundayData);
+  const prevUnhiddenAll = usePrevious(hasUnhiddenAll);
+  const prevUnlockedIds = usePrevious(unlockedAchievementIds);
 
   useEffect(() => {
     // Don't run on initial render or if previous data is not available
@@ -465,17 +474,30 @@ export default function App() {
       return;
     }
 
-    const prevAchievements = calculateAchievements(prevSaturdayData, prevSundayData);
-    const currentAchievements = calculateAchievements(saturdayData, sundayData);
+    const prevAchievements = calculateAchievements(prevSaturdayData, prevSundayData, prevUnhiddenAll || false, prevUnlockedIds || []);
+    const currentAchievements = calculateAchievements(saturdayData, sundayData, hasUnhiddenAll, unlockedAchievementIds);
+
+    let newUnlocks = false;
+    const updatedUnlockedIds = [...unlockedAchievementIds];
 
     currentAchievements.forEach((current, index) => {
       const prev = prevAchievements[index];
-      if (current.unlocked && !prev.unlocked) {
-        // Achievement was just unlocked!
+      const alreadyUnlocked = unlockedAchievementIds.includes(current.id);
+
+      // Only fire a toast if the achievement is newly met AND not already in our permanent history
+      if (current.unlocked && !prev.unlocked && !alreadyUnlocked) {
         addToast(current.title, current.icon);
+        if (!updatedUnlockedIds.includes(current.id)) {
+          updatedUnlockedIds.push(current.id);
+          newUnlocks = true;
+        }
       }
     });
-  }, [saturdayData, sundayData, prevSaturdayData, prevSundayData, calculateAchievements, addToast]);
+
+    if (newUnlocks) {
+      setUnlockedAchievementIds(updatedUnlockedIds);
+    }
+  }, [saturdayData, sundayData, hasUnhiddenAll, unlockedAchievementIds, prevSaturdayData, prevSundayData, prevUnhiddenAll, prevUnlockedIds, calculateAchievements, addToast]);
 
   // --- Handlers ---
   const updateCount = (id: string, day: 'Saturday' | 'Sunday', field: 'caught' | 'shiny' | 'hundo' | 'shundo' | 'candy' | 'megaEnergy' | 'primalEnergy', value: number) => {
@@ -536,13 +558,15 @@ export default function App() {
     if (window.confirm("Are you sure you want to reset all raid progress? This cannot be undone.")) {
       setSaturdayData(INITIAL_SATURDAY_DATA);
       setSundayData(INITIAL_SUNDAY_DATA);
+      setHasUnhiddenAll(false);
+      setUnlockedAchievementIds([]);
     }
   };
 
   const unhideAllRecords = () => {
     setSaturdayData(saturdayData.map(r => ({ ...r, hidden: false })));
     setSundayData(sundayData.map(r => ({ ...r, hidden: false })));
-    addToast('All Pokémon unhidden!', '👀');
+    setHasUnhiddenAll(true);
   };
 
   // --- Render Helpers ---
@@ -599,7 +623,7 @@ export default function App() {
   );
 
   const renderAchievementsTab = () => {
-    const achievements = calculateAchievements(saturdayData, sundayData);
+    const achievements = calculateAchievements(saturdayData, sundayData, hasUnhiddenAll, unlockedAchievementIds);
     const unlockedCount = achievements.filter(a => a.unlocked).length;
 
     return (
@@ -608,16 +632,32 @@ export default function App() {
         <p style={{ marginBottom: '20px', color: '#666' }}>Track your overall progress throughout the event. Can you unlock them all?</p>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {achievements.map(a => (
-            <div key={a.id} style={{ ...styles.achievementCard, ...(a.unlocked ? styles.achievementUnlocked : styles.achievementLocked) }}>
-              <div style={styles.achievementIcon}>{a.icon}</div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', ...(a.unlocked ? { background: 'linear-gradient(135deg, #FF007A, #7000FF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : { color: '#555' }) }}>{a.title}</h3>
-                <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{a.desc}</p>
+          {achievements.map(a => {
+            const isSecret = (a as any).secret;
+            
+            if (isSecret && !a.unlocked) {
+              return (
+                <div key={a.id} style={{ ...styles.achievementCard, ...styles.achievementLocked }}>
+                  <div style={styles.achievementIcon}>❓</div>
+                  <div style={{ flex: 1 }}>
+                    <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', color: '#555' }}>Secret Achievement</h3>
+                    <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Keep playing to discover how to unlock this!</p>
+                  </div>
+                </div>
+              );
+            }
+            
+            return (
+              <div key={a.id} style={{ ...styles.achievementCard, ...(a.unlocked ? styles.achievementUnlocked : styles.achievementLocked) }}>
+                <div style={styles.achievementIcon}>{a.icon}</div>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ margin: '0 0 4px 0', fontSize: '18px', ...(a.unlocked ? { background: 'linear-gradient(135deg, #FF007A, #7000FF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' } : { color: '#555' }) }}>{a.title}</h3>
+                  <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>{a.desc}</p>
+                </div>
+                {a.unlocked && <div style={{ fontSize: '24px', color: '#4CAF50' }}>✅</div>}
               </div>
-              {a.unlocked && <div style={{ fontSize: '24px', color: '#4CAF50' }}>✅</div>}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );
